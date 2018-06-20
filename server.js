@@ -8,15 +8,34 @@ app.use(express.static('public'));
 io.sockets.on('connection', newConnection);
 
 var playersInLobby = 0; // keep a server count with the number of players currently connected
-var playerUsername = {};
-var playersAskedForTeamSelection = 0;
+var playerUsername = {}; // playerUsername[socket.id] = username
+var playersAskedForTeamSelection = 0, playersAsked = []; // keep track of the unique players that send team requests
 
 function newConnection(socket) {
     console.log(' New Connection: ' + socket.id); // log new connections
 
+    var prevLobby = playersInLobby;
     socket.on('askteam', logAskTeam);
     function logAskTeam(data){
+        var inflag = false;
+        for(var i in playersAsked){
+            if(data == i) inflag = true;
+        }
+
+        if(!inflag){
+            playersAsked.push(data);
+            playersAskedForTeamSelection++;
+        }
         console.log("Received team request from: " + data);
+
+        if(playersAskedForTeamSelection == 6) // number of players in game
+        {
+            console.log("Players ready for team selection!");
+            console.log("Emitting voting packet");
+            playersAsked = []; // reset all the variables keeping track of the # of players asked for teams selection
+            playersAskedForTeamSelection = 0;
+            io.sockets.emit('startTeamVoting', "OK");
+        }
     }
 
     socket.on('declareName', logDeclareName); // when someone enters their username

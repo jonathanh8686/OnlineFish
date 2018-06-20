@@ -43,13 +43,13 @@ function Identify(){
 function updateNames(serverPU){
     playerUsername = serverPU;
     console.log(playerUsername);
-    if(Object.keys(serverPU).length >= 2){
+    if(Object.keys(serverPU).length >= 6){
         console.log("Game will begin!");
 
         clearInterval(promptInterval);
         clearInterval(drawPCInterval);
 
-        beginGame();
+        fadeOutPreviousScreen();
 
     }
 }

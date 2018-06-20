@@ -18,24 +18,32 @@ function connectionMade(){
 	ident = new Identify();
 }
 
-function beginGame(){
-	//background(51);
-	fadeInterval = setInterval(fadeLogin, 10);
-	selectionInstance = TeamSelect();
+function fadeOutPreviousScreen(){
+	background(51);
+	beginGame();
+	//fadeInterval = setInterval(fadeLogin, 10);
 }
 
 var tpFactor = 0;
 function fadeLogin(){
 	fill(51, 51, 51, min(255,tpFactor));
+	console.log(tpFactor);
 	rect(0, 0, 1600, 800);
 	tpFactor += 0.5;
-	if(tpFactor >= 255) {
+
+	if(tpFactor >= 50) {
 		clearInterval(fadeInterval);
+		beginGame();
 	}
+}
+
+function beginGame(){
+	//selectionInstance = TeamSelect();
+	gameInstance = Game();
 }
 
 
 function draw() {
 	noStroke();
-	fill(255);
+
 }
