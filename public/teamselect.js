@@ -1,5 +1,6 @@
 var playerPositions = [];
 // TODO: IMPLEMENT VOTING but not rn
+
 // voting on team captains?
 function TeamSelect(){
 

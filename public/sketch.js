@@ -1,11 +1,20 @@
 var socket;
-var gameInstance, playerInstance, selectionInstance;
+var gameInstance, playerInstance, selectionInstance, dealerInstance;
 var fadeInterval;
 var playerUsername;
 
+var playerTextFont;
+var backgroundImg;
+
+function preload(){
+	playerTextFont = loadFont("fonts/academic.ttf");
+}
+
 function setup() {
-	createCanvas(1600, 800);
+	var cnv = createCanvas(1600, 800);
 	background(51);
+
+	backgroundImg = loadImage("images/background.jpg");
 
 	socket = io.connect('66.27.76.64:3000'); // connect to the server (hosted on my computer)
 	socket.on('connect', connectionMade)
@@ -19,7 +28,8 @@ function connectionMade(){
 }
 
 function fadeOutPreviousScreen(){
-	background(51);
+	background(0);
+	background(backgroundImg);
 	beginGame();
 	//fadeInterval = setInterval(fadeLogin, 10);
 }
@@ -27,7 +37,7 @@ function fadeOutPreviousScreen(){
 var tpFactor = 0;
 function fadeLogin(){
 	fill(51, 51, 51, min(255,tpFactor));
-	console.log(tpFactor);
+
 	rect(0, 0, 1600, 800);
 	tpFactor += 0.5;
 
@@ -40,6 +50,7 @@ function fadeLogin(){
 function beginGame(){
 	//selectionInstance = TeamSelect();
 	gameInstance = Game();
+	dealerInstance = Dealer();
 }
 
 

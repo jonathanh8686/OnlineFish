@@ -42,7 +42,6 @@ function Identify(){
 
 function updateNames(serverPU){
     playerUsername = serverPU;
-    console.log(playerUsername);
     if(Object.keys(serverPU).length >= 6){
         console.log("Game will begin!");
 
@@ -55,7 +54,6 @@ function updateNames(serverPU){
 }
 
 function setName(){
-    console.log("setname");
     var data = {
         pid: socket.id, // id that is declaring username
         username: username

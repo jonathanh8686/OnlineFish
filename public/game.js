@@ -1,4 +1,6 @@
-// TODO: THE ORDER IS NOT CORRECT FIX IT
+var blueTeam = [], redTeam = [];
+var playerNameList = [], orderedPlayerNameList = [];
+
 function Game(){
     initPositions();
     drawNames();
@@ -42,27 +44,33 @@ function rot(arr, count){
 function drawNames(){
     // so this is like mega autisic so im going to eventually change this i promise
 
-    var playerNameList = [];
     for(var key in playerUsername){
         playerNameList.push(playerUsername[key]);
     }
+    orderedPlayerNameList = playerNameList; // keep a copy with the same ordering
 
     var youPos = 0;
     for(var i = 0; i < playerNameList.length; i++){
-        console.log("pnl: " + playerNameList[i]);
-        console.log("pu: " + playerUsername[socket.id]);
         if(playerNameList[i] == playerUsername[socket.id])
             youPos = i;
     }
-    console.log(youPos);
     playerNameList = rot(playerNameList, youPos);
     textSize(50);
+    textFont(playerTextFont);
 
     for(var i = 0; i < playerPositions.length; i++){
         if(i == 0 || i == 3) textAlign(CENTER, CENTER);
         else if(i == 1|| i == 2) textAlign(RIGHT, CENTER);
         else if(i == 4 || i == 5) textAlign(LEFT, CENTER);
+
+        if((i + youPos) % 2){
+            fill(255, 0, 0);
+            redTeam.push(playerNameList[i]);
+        }
+        else {
+            fill(0, 0, 255);
+            blueTeam.push(playerNameList[i]);
+        }
         text(playerNameList[i], playerPositions[i][0], playerPositions[i][1]);
     }
-
 }

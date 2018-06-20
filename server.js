@@ -11,8 +11,42 @@ var playersInLobby = 0; // keep a server count with the number of players curren
 var playerUsername = {}; // playerUsername[socket.id] = username
 var playersAskedForTeamSelection = 0, playersAsked = []; // keep track of the unique players that send team requests
 
+var cards = [];
+var cardNumbers = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+var cardSuits = ['C', 'D', 'H', 'S'];
+genCards();
+
+function genCards(){
+    for(var n in cardNumbers){
+        for(var suit in cardSuits){
+            cards.push(cardNumbers[n] + cardSuits[suit]);
+        }
+    }
+    cards.push("black_joker");
+    cards.push("red_joker");
+}
+
 function newConnection(socket) {
     console.log(' New Connection: ' + socket.id); // log new connections
+
+    socket.on('askdeal', dealPlayer);
+    function dealPlayer(playerID){
+        console.log("Received deal request from " + playerID + " (" + playerUsername[playerID] + ")");
+        var dealtCards = []; // 0 to 5
+
+        for(var i = 0; i < 9; i++){
+            var indChosen = Math.floor(Math.random() * cards.length);
+            var cardChosen = cards[indChosen];
+            dealtCards.push(cardChosen);
+            cards.splice(indChosen, 1); // delete the card that was dealt
+        }
+
+        if(cards.length == 0) genCards();
+
+        console.log("Sending cards back to player!");
+        io.sockets.connected[playerID].emit('dealtCards', dealtCards);
+        //socket.broadcast.to(playerID).emit(dealtCards, 'dealtCards');
+    }
 
     var prevLobby = playersInLobby;
     socket.on('askteam', logAskTeam);
@@ -61,6 +95,7 @@ function newConnection(socket) {
     socket.on('disconnect', logLeave); // when client leaves server
     function logLeave(reason) {
         playersInLobby -= 1;
+        if(playersInLobby < 0) playersInLobby = 0;
 
         var data = {
             pc: playersInLobby,
