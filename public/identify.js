@@ -1,7 +1,7 @@
 var username = "", finishedUsername = false, allowedUsername = true;
 var userpromptGraphics;
 var psocket;
-var playerUsername;
+var playerUsername = {}, playerID = {};
 
 function Identify(){
     userpromptGraphics = createGraphics(1300, 125);
@@ -40,9 +40,11 @@ function Identify(){
 
 }
 
-function updateNames(serverPU){
-    playerUsername = serverPU;
-    if(Object.keys(serverPU).length >= 6){
+function updateNames(serverData){
+    playerUsername = serverData.puser;
+    playerID = serverData.pid;
+    console.log(playerUsername);
+    if(Object.keys(playerUsername).length >= 6){
         console.log("Game will begin!");
 
         clearInterval(promptInterval);
@@ -56,10 +58,10 @@ function updateNames(serverPU){
 function setName(){
     var data = {
         pid: socket.id, // id that is declaring username
-        username: username
+        um: username
     }
     socket.emit('declareName', data);
-    console.log("You []" + data.pid + "] have declared your username to be " + data.username);
+    console.log("You []" + data.pid + "] have declared your username to be " + data.um);
 }
 function keyPressed(){
     if(finishedUsername) return; // don't accept new username changes

@@ -1,7 +1,8 @@
 var socket;
-var gameInstance, playerInstance, selectionInstance, dealerInstance;
+var gameinitInstance, playerInstance, selectionInstance, dealerInstance, selectionInstance, callInstance;
 var fadeInterval;
 var playerUsername;
+var cardCallInstance;
 
 var playerTextFont;
 var backgroundImg;
@@ -16,7 +17,8 @@ function setup() {
 
 	backgroundImg = loadImage("images/background.jpg");
 
-	socket = io.connect('66.27.76.64:3000'); // connect to the server (hosted on my computer)
+	//socket = io.connect('66.27.76.64:3000');
+	socket = io.connect('localhost:3000'); // connect to the server (hosted on my computer)
 	socket.on('connect', connectionMade)
 
 }
@@ -28,7 +30,6 @@ function connectionMade(){
 }
 
 function fadeOutPreviousScreen(){
-	background(0);
 	background(backgroundImg);
 	beginGame();
 	//fadeInterval = setInterval(fadeLogin, 10);
@@ -48,9 +49,13 @@ function fadeLogin(){
 }
 
 function beginGame(){
+	console.log("game begin");
 	//selectionInstance = TeamSelect();
-	gameInstance = Game();
+	gameinitInstance = GameInitalizer();
 	dealerInstance = Dealer();
+
+	selectionInstance = SelectionUI();
+	callInstance = Caller();
 }
 
 

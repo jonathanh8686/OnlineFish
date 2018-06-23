@@ -1,32 +1,17 @@
-var blueTeam = [], redTeam = [];
+var blueTeam = [], redTeam = [], youTeam = "";
 var playerNameList = [], orderedPlayerNameList = [];
+var youPos, youUsername;
+var playerPositions = [];
 
-function Game(){
+function GameInitalizer(){
     initPositions();
+    initNames();
     drawNames();
-}
-
-function rot(arr, order) {
-    order = order % arr.length;
-    var a = arr.length - order;
-
-    reverse(arr, 0, a-1);
-    reverse(arr, a, arr.length-1);
-    reverse(arr, 0, arr.length-1);
-} // allows for rotating the array
-
-function reverse(arr, left, right){
-    while(left < right){
-        var temp = arr[left];
-        arr[left] = arr[right];
-        arr[right] = temp;
-        left++;
-        right--;
-    }
 }
 
 function initPositions(){
     // TODO: this is so shit pls make less shit
+    playerPositions = [];
     playerPositions.push([800, 700]);
     playerPositions.push([1400, 525]);
     playerPositions.push([1400, 275]);
@@ -41,20 +26,26 @@ function rot(arr, count){
     return arr;
 }
 
-function drawNames(){
-    // so this is like mega autisic so im going to eventually change this i promise
-
+function initNames(){
     for(var key in playerUsername){
         playerNameList.push(playerUsername[key]);
     }
     orderedPlayerNameList = playerNameList; // keep a copy with the same ordering
 
-    var youPos = 0;
     for(var i = 0; i < playerNameList.length; i++){
         if(playerNameList[i] == playerUsername[socket.id])
             youPos = i;
     }
     playerNameList = rot(playerNameList, youPos);
+
+    if(youPos % 2 == 0) youTeam = "blue";
+    else youTeam = "red";
+    console.log("You are on " + youTeam + " team!");
+}
+
+function drawNames(){
+    initPositions();
+    // so this is like mega autisic so im going to eventually change this i promise
     textSize(50);
     textFont(playerTextFont);
 
@@ -68,7 +59,7 @@ function drawNames(){
             redTeam.push(playerNameList[i]);
         }
         else {
-            fill(0, 0, 255);
+            fill(25, 75, 255);
             blueTeam.push(playerNameList[i]);
         }
         text(playerNameList[i], playerPositions[i][0], playerPositions[i][1]);
